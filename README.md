@@ -1,5 +1,5 @@
 # My First C# .Net API (Work in Progress, mostly for learning purposes)
-
+[![.NET](https://github.com/tylerkibble/MyApi/actions/workflows/dotnet.yml/badge.svg)](https://github.com/tylerkibble/MyApi/actions/workflows/dotnet.yml)
 ## Description
 
 MyApi is a web service that provides a set of endpoints for clients to interact with. It is developed using .NET framework and C#.

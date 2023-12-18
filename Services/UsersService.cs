@@ -22,7 +22,7 @@ public class UsersService
 
     public async Task<User> CreateUser(User user)
     {
-        _context.Users.Add(user);
+        //_context.Users.Add(user);
         await _context.SaveChangesAsync();
 
         return user;

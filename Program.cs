@@ -1,15 +1,22 @@
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
 using MyApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddScoped<UsersService>();
+builder.Services.AddScoped<MyApiContext>();
+
+
+
+builder.Services.AddDbContext<MyApiDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -43,7 +50,7 @@ app.MapGet("/weatherforecast", () =>
 
 // Users
 app.MapPost("/users", async (User user, UsersService usersService) =>
-{ 
+{
     /* Create a new user */
 
     // if (string.IsNullOrEmpty(user.Name) || string.IsNullOrEmpty(user.Email))
@@ -95,7 +102,9 @@ app.MapGet("/products/{id}", (int id) =>
 
 app.Run();
 
-
+internal class MyApiContext
+{
+}
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);

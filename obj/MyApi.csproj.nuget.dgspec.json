@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\tyler\\Projects\\MyApi\\MyApi.csproj": {}
+    "C:\\Users\\tyler\\Documents\\VS Code Projects\\MyApi\\MyApi.csproj": {}
   },
   "projects": {
-    "C:\\Users\\tyler\\Projects\\MyApi\\MyApi.csproj": {
+    "C:\\Users\\tyler\\Documents\\VS Code Projects\\MyApi\\MyApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\tyler\\Projects\\MyApi\\MyApi.csproj",
+        "projectUniqueName": "C:\\Users\\tyler\\Documents\\VS Code Projects\\MyApi\\MyApi.csproj",
         "projectName": "MyApi",
-        "projectPath": "C:\\Users\\tyler\\Projects\\MyApi\\MyApi.csproj",
+        "projectPath": "C:\\Users\\tyler\\Documents\\VS Code Projects\\MyApi\\MyApi.csproj",
         "packagesPath": "C:\\Users\\tyler\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\tyler\\Projects\\MyApi\\obj\\",
+        "outputPath": "C:\\Users\\tyler\\Documents\\VS Code Projects\\MyApi\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\tyler\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -45,6 +45,10 @@
             "Microsoft.EntityFrameworkCore.Design": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
               "version": "[8.0.0, )"
             },

@@ -24,6 +24,9 @@ To run MyApi, follow these steps:
 
 bash dotnet restore dotnet run
 
+## Swagger Docs
+
+http://localhost:5186/swagger/index.html
 
 ## API Endpoints
 

@@ -6,6 +6,9 @@ public class MyApiDbContext : DbContext
         : base(options)
     {
     }
+
+    public object Users { get; internal set; }
+
     //public DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder options)

@@ -15,8 +15,13 @@ public class UsersService
     {
         //_context.Users.Add(user);
         await _context.SaveChangesAsync();
-
         return user;
+    }
+
+
+    internal Task<object?> GetUserById(int id)
+    {
+        throw new NotImplementedException();
     }
 }
 // public class UsersService

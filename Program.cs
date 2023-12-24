@@ -11,9 +11,10 @@ builder.Services.AddScoped<MyApiContext>();
 
 
 
-builder.Services.AddDbContext<MyApiDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<MyApiDbContext>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 
 var app = builder.Build();
 
@@ -49,7 +50,7 @@ app.MapGet("/weatherforecast", () =>
 
 
 // Users
-app.MapPost("/users", async (User user, UsersService usersService) =>
+app.MapPost("/CreateUsers", async (User user, UsersService usersService) =>
 {
     /* Create a new user */
 
@@ -59,18 +60,29 @@ app.MapPost("/users", async (User user, UsersService usersService) =>
     // }
 
     var createdUser = await usersService.CreateUser(user);
-
+    // Console.WriteLine(createdUser);
     if (createdUser == null)
     {
         return Results.Problem("An error occurred while creating the user.", statusCode: 500);
     }
-
+    Console.WriteLine(createdUser.Name, createdUser.Email);
     return Results.Created($"/users/{createdUser.Id}", createdUser);
 })
 .WithName("CreateUser");
 
-app.MapGet("users/{id}", (int id) => {/* Get a user by id */})
+app.MapGet("GetUsers/{id}", async (int id, UsersService usersService) => 
+{
+    var user = await usersService.GetUserById(id);
+    if(user == null)
+    {
+        return Results.NotFound($"User with id {id} not found");
+    }
+
+    return Results.Ok(user);
+})
 .WithName("GetUser");
+// app.MapGet("GetUsers/{id}", (int id) => {/* Get a user by id */})
+// .WithName("GetUser");
 
 app.MapPut("/users/{id}", (int id, User user) => { /* Update a user */ })
 .WithName("UpdateUser");

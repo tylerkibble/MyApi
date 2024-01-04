@@ -15,14 +15,17 @@ Before you begin, ensure you have met the following requirements:
 
 Clone this repository to your local machine and navigate to the project directory:
 
-`bash git clone <repo-url> cd MyApi`
+`git clone https://github.com/tylerkibble/MyApi` 
+<br/>
+
+`cd MyApi`
 
 
 ## Usage
 
 To run MyApi, follow these steps:
 
-bash dotnet restore dotnet run
+`dotnet run`
 
 ## Swagger Docs
 

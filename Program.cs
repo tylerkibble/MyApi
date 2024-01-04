@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using MyApi.Models;
+using Microsoft.AspNetCore.Mvc.ViewFeatures.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -60,7 +61,7 @@ app.MapPost("/CreateUsers", async (User user, UsersService usersService) =>
     // }
 
     var createdUser = await usersService.CreateUser(user);
-    // Console.WriteLine(createdUser);
+    Console.WriteLine(createdUser);
     if (createdUser == null)
     {
         return Results.Problem("An error occurred while creating the user.", statusCode: 500);
@@ -78,11 +79,24 @@ app.MapGet("GetUsers/{id}", async (int id, UsersService usersService) =>
         return Results.NotFound($"User with id {id} not found");
     }
 
+
     return Results.Ok(user);
 })
 .WithName("GetUser");
 // app.MapGet("GetUsers/{id}", (int id) => {/* Get a user by id */})
 // .WithName("GetUser");
+
+app.MapGet("GetAllUsers", async (UsersService usersService) =>
+{
+     var users = await usersService.GetAllUsers();
+    foreach (var user in users)
+    {
+        Console.WriteLine($"ID: {user.Id}, Name: {user.Name}, Email: {user.Email}");
+    }
+
+    return users;
+})
+.WithName("GetAllUsers");
 
 app.MapPut("/users/{id}", (int id, User user) => { /* Update a user */ })
 .WithName("UpdateUser");

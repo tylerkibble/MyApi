@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using MyApi.Models;
 
 
@@ -10,27 +11,59 @@ public class UsersService
     {
         _context = context;
     }
-
     public async Task<User> CreateUser(User user)
     {
-        //_context.Users.Add(user);
-        await _context.SaveChangesAsync();
+        _context.Users.Add(user);
+        var result = await _context.SaveChangesAsync();
+        Console.WriteLine($"SaveChangesAsync result: {result}");
         return user;
     }
+    // public async Task<User> CreateUser(User user)
+    // {
+    //     //_context.Users.Add(user);
+    //     await _context.SaveChangesAsync();
+    //     Console.Write(user);
+    //     return user;
+    // }
 
 
-    internal Task<object?> GetUserById(int id)
+    internal async Task<object?> GetUserById(int id)
     {
-        throw new NotImplementedException();
+        var user = await _context.Users.FindAsync(id);
+        return user;
+        // throw new NotImplementedException();
     }
-}
-// public class UsersService
-// {
-//     public async Task<User> CreateUser(User user)
-//     {
-//         // Insert your logic for creating a user here.
-//         // This might involve adding the user to a database and then returning the newly created user.
+    public async Task<List<User>> GetAllUsers()
+    {
+        var users = await _context.Users.ToListAsync();
+        Console.WriteLine(users.ToArray());
+        return users;
+    }
 
-//         return user; // This is a placeholder. Replace with your actual implementation.
-//     }
-// }
+    public async Task<bool> UpdateUser(User user)
+    {
+        _context.Entry(user).State = EntityState.Modified;
+        try
+        {
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            return false;
+        }
+    }
+
+    public async Task<bool> DeleteUser(int id)
+    {
+        var user = await _context.Users.FindAsync(id);
+        if (user == null)
+        {
+            return false;
+        }
+        _context.Users.Remove(user);
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
+}

@@ -34,8 +34,8 @@ http://localhost:5186/swagger/index.html
 ## API Endpoints
 
 - `GET /weatherforecast`: Get a weather forecast.
-- `POST /users`: Create a new user.
-- `GET /users/{id}`: Get a user by id.
+- `POST /CreateUsers`: Create a new user.
+- `GET /GetUsers/{id}`: Get a user by id.
 - `PUT /users/{id}`: Update a user.
 - `DELETE /users/{id}`: Delete a user.
 - `POST /register`: Register a new user.

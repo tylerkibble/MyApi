@@ -98,17 +98,38 @@ app.MapGet("GetAllUsers", async (UsersService usersService) =>
 })
 .WithName("GetAllUsers");
 
-app.MapPut("/users/{id}", (int id, User user) => { /* Update a user */ })
+
+app.MapPut("/users/{id}", async (int id, User user, UsersService usersService) =>
+{
+    var updatedUser = await usersService.UpdateUser(id, user);
+    if (updatedUser == null)
+    {
+        return Results.NotFound($"User with id {id} not found");
+    }
+    return Results.Ok(updatedUser);
+})
 .WithName("UpdateUser");
 
-app.MapDelete("/users/{id}", (int id) => { /* Delete a user */ })
+
+app.MapDelete("/users/{id}", async (int id, UsersService usersService) =>
+{
+    var result = await usersService.DeleteUser(id);
+    if (result)
+    {
+        return Results.Ok($"User with id {id} deleted");
+    }
+    else
+    {
+        return Results.NotFound($"User with id {id} not found");
+    }
+ })
 .WithName("DeleteUser");
 
 // Auth
-app.MapPost("/register", (UserRegistration registration) => { /* Register a new user */ })
+app.MapPost("/Auth/register", (UserRegistration registration) => { /* Register a new user */ })
    .WithName("Register");
 
-app.MapPost("/login", (UserLogin login) => { /* Log in a user */ })
+app.MapPost("/Auth/login", (UserLogin login) => { /* Log in a user */ })
    .WithName("Login");
 
 // File Upload challenge 

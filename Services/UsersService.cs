@@ -40,7 +40,7 @@ public class UsersService
         return users;
     }
 
-    public async Task<bool> UpdateUser(User user)
+    public async Task<bool> UpdateUser(int id, User user)
     {
         _context.Entry(user).State = EntityState.Modified;
         try

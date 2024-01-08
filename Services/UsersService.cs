@@ -18,14 +18,6 @@ public class UsersService
         Console.WriteLine($"SaveChangesAsync result: {result}");
         return user;
     }
-    // public async Task<User> CreateUser(User user)
-    // {
-    //     //_context.Users.Add(user);
-    //     await _context.SaveChangesAsync();
-    //     Console.Write(user);
-    //     return user;
-    // }
-
 
     internal async Task<object?> GetUserById(int id)
     {

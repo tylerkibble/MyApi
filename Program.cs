@@ -1,21 +1,18 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
-using MyApi.Models;
 using Microsoft.AspNetCore.Mvc.ViewFeatures.Infrastructure;
+using MyApi.Models;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddScoped<UsersService>();
 builder.Services.AddScoped<MyApiContext>();
-
-
-
 builder.Services.AddDbContext<MyApiDbContext>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
 
 var app = builder.Build();
 
@@ -44,7 +41,8 @@ app.MapGet("/weatherforecast", () =>
             summaries[Random.Shared.Next(summaries.Length)]
         ))
         .ToArray();
-    return forecast;
+    // Using the ./ApiResponse.cs wrapper for the response to get a proper response from all endpoints.
+    return ApiResponse<IEnumerable<WeatherForecast>>.SuccessResponse(forecast);
 })
 .WithName("GetWeatherForecast")
 .WithOpenApi();
@@ -53,48 +51,32 @@ app.MapGet("/weatherforecast", () =>
 // Users
 app.MapPost("/CreateUsers", async (User user, UsersService usersService) =>
 {
-    /* Create a new user */
-
-    // if (string.IsNullOrEmpty(user.Name) || string.IsNullOrEmpty(user.Email))
-    // {
-    //     return Task.FromResult(Results.BadRequest("Error"));
-    // }
-
     var createdUser = await usersService.CreateUser(user);
-    Console.WriteLine(createdUser);
     if (createdUser == null)
     {
-        return Results.Problem("An error occurred while creating the user.", statusCode: 500);
+        return ApiResponse<User>.ErrorResponse("An error occurred while creating the user.");
     }
-    Console.WriteLine(createdUser.Name, createdUser.Email);
-    return Results.Created($"/users/{createdUser.Id}", createdUser);
+    return ApiResponse<User>.SuccessResponse(createdUser, "User created successfully.");
 })
 .WithName("CreateUser");
 
-app.MapGet("GetUsers/{id}", async (int id, UsersService usersService) => 
+
+app.MapGet("GetUsers/{id}", async (int id, UsersService usersService) =>
 {
     var user = await usersService.GetUserById(id);
-    if(user == null)
+    if (user == null)
     {
-        return Results.NotFound($"User with id {id} not found");
+        return ApiResponse<User>.ErrorResponse($"User with id {id} not found");
     }
-
-
-    return Results.Ok(user);
+    return ApiResponse<User>.SuccessResponse((User)user);
 })
 .WithName("GetUser");
-// app.MapGet("GetUsers/{id}", (int id) => {/* Get a user by id */})
-// .WithName("GetUser");
+
 
 app.MapGet("GetAllUsers", async (UsersService usersService) =>
 {
-     var users = await usersService.GetAllUsers();
-    foreach (var user in users)
-    {
-        Console.WriteLine($"ID: {user.Id}, Name: {user.Name}, Email: {user.Email}");
-    }
-
-    return users;
+    var users = await usersService.GetAllUsers();
+    return ApiResponse<IEnumerable<User>>.SuccessResponse(users);
 })
 .WithName("GetAllUsers");
 
@@ -102,11 +84,11 @@ app.MapGet("GetAllUsers", async (UsersService usersService) =>
 app.MapPut("/users/{id}", async (int id, User user, UsersService usersService) =>
 {
     var updatedUser = await usersService.UpdateUser(id, user);
-    if (updatedUser == null)
-    {
-        return Results.NotFound($"User with id {id} not found");
-    }
-    return Results.Ok(updatedUser);
+    // if (updatedUser == null)
+    // {
+    //     return ApiResponse<User>.ErrorResponse($"User with id {id} not found");
+    // }
+    return ApiResponse<User>.SuccessResponse(updatedUser, "User updated successfully.");
 })
 .WithName("UpdateUser");
 
@@ -116,13 +98,13 @@ app.MapDelete("/users/{id}", async (int id, UsersService usersService) =>
     var result = await usersService.DeleteUser(id);
     if (result)
     {
-        return Results.Ok($"User with id {id} deleted");
+        return ApiResponse<string>.SuccessResponse($"User with id {id} deleted");
     }
     else
     {
-        return Results.NotFound($"User with id {id} not found");
+        return ApiResponse<string>.ErrorResponse($"User with id {id} not found");
     }
- })
+})
 .WithName("DeleteUser");
 
 // Auth

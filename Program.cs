@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.ViewFeatures.Infrastructure;
 using MyApi.Models;
+using MyApi.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +14,7 @@ builder.Services.AddScoped<MyApiContext>();
 builder.Services.AddDbContext<MyApiDbContext>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<UrlRedirectService>();
 
 var app = builder.Build();
 
@@ -106,6 +108,14 @@ app.MapDelete("/users/{id}", async (int id, UsersService usersService) =>
     }
 })
 .WithName("DeleteUser");
+
+// Redirecting
+app.MapPost("/create-redirect", async (string originalUrl, UrlRedirectService redirectService) =>
+{
+    var redirect = await redirectService.CreateRedirect(originalUrl);
+    return ApiResponse<UrlRedirect>.SuccessResponse(redirect, "Redirect created successfully.");
+})
+.WithName("CreateRedirect");
 
 // Auth
 app.MapPost("/Auth/register", (UserRegistration registration) => { /* Register a new user */ })

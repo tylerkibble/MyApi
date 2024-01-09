@@ -7,9 +7,9 @@ namespace MyApi.Models
     {
         public bool Success { get; set; }
         public string Message { get; set; }
-        public T Data { get; set; }
+        public T? Data { get; set; }
 
-        public ApiResponse(bool success, string message, T data = default)
+        public ApiResponse(bool success, string message, [AllowNull] T data = default)
         {
             Success = success;
             Message = message;

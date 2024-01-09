@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using MyApi.Models;
+using Microsoft.EntityFrameworkCore;
 
 
 public class UsersService

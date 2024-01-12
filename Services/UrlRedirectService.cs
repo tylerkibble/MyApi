@@ -12,13 +12,12 @@ namespace MyApi.Services
         {
             _context = context;
         }
-
         public async Task<UrlRedirect> CreateRedirect(string originalUrl)
         {
             var redirect = new UrlRedirect
             {
                 OriginalUrl = originalUrl,
-                RedirectUrl = GenerateRedirectUrl(),
+                RedirectUrl = await GenerateRedirectUrlAsync(),
                 CreatedAt = DateTime.UtcNow
             };
 
@@ -28,11 +27,29 @@ namespace MyApi.Services
             return redirect;
         }
 
-        private string GenerateRedirectUrl()
+
+        private async Task<string> GenerateRedirectUrlAsync()
         {
-            // Implement a method to generate a unique redirect URL.
-            // This is a placeholder and should be replaced with your actual URL generation logic.
-            return "http://example.com/redirected/" + Guid.NewGuid().ToString();
+            var baseUrl = "http://localhost:5186/redirected/"; // Replace with actual retrieval from config
+            var uniqueId = await GenerateUniqueIdAsync();
+            var finalUrl = $"{baseUrl}{uniqueId}";
+            return finalUrl;
         }
+
+
+        private async Task<string> GenerateUniqueIdAsync()
+        {
+            string uniqueId;
+            bool isUnique;
+
+            do
+            {
+                uniqueId = Guid.NewGuid().ToString("N"); // Replace this with your desired generation logic
+                isUnique = !await _context.UrlRedirects.AnyAsync(r => r.RedirectUrl.EndsWith(uniqueId));
+            } while (!isUnique);
+
+            return uniqueId;
+        }
+
     }
 }

@@ -395,3 +395,8 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# Project Specific 
+**/bin/Debug/**
+**/obj/Debug/**
+myapi.db
